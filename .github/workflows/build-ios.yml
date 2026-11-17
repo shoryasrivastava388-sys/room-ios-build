@@ -1,0 +1,31 @@
+name: Build unsigned Room iOS app
+"on":
+  workflow_dispatch:
+
+jobs:
+  unsigned-ipa:
+    runs-on: macos-14
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Archive native iOS app without signing
+        run: |
+          xcodebuild -version
+          xcodebuild -project Room.xcodeproj -scheme Room -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/Room.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" DEVELOPMENT_TEAM="" archive
+      - name: Package unsigned IPA for local re-signing
+        run: |
+          mkdir -p "$RUNNER_TEMP/room-ipa/Payload"
+          cp -R "$RUNNER_TEMP/Room.xcarchive/Products/Applications/Room.app" "$RUNNER_TEMP/room-ipa/Payload/"
+          cd "$RUNNER_TEMP/room-ipa"
+          /usr/bin/zip -qry Room-unsigned.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Room-unsigned-ipa
+          path: ${{ runner.temp }}/room-ipa/Room-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 7
