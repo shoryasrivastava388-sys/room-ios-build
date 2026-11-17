@@ -8,9 +8,9 @@ Screen sharing is explicitly unavailable in this iOS build. Sharing other apps r
 
 ## Build an unsigned IPA
 
-The included `.github/workflows/build-ios.yml` is **manual only**. It runs Xcode on a macOS GitHub runner, archives with `CODE_SIGNING_ALLOWED=NO`, and packages `Room-unsigned.ipa` as an artifact. It requires no Apple Developer signing certificate or provisioning secrets. GitHub Actions availability and runner billing must be checked before running it.
+The included `.github/workflows/build-ios.yml` is **manual only**. It runs Xcode on a standard `macos-latest` GitHub runner, archives with `CODE_SIGNING_ALLOWED=NO`, and packages `Room-unsigned.ipa` as an artifact. It requires no Apple Developer signing certificate or provisioning secrets.
 
-Publish the contents of this folder at a repository root, then manually run **Build unsigned Room iOS app**. No workflow has been published or run as part of preparing these sources.
+The source is published at [shoryasrivastava388-sys/room-ios-build](https://github.com/shoryasrivastava388-sys/room-ios-build). [Build 44161855500](https://github.com/shoryasrivastava388-sys/room-ios-build/actions/runs/44161855500) successfully archived the app, packaged the unsigned IPA, and uploaded the artifact. Future builds can be started from the repository's [manual workflow](https://github.com/shoryasrivastava388-sys/room-ios-build/actions/workflows/build-ios.yml).
 
 Alternatively, on a Mac with Xcode:
 
@@ -23,10 +23,10 @@ xcodebuild -project Room.xcodeproj -scheme Room -configuration Release \
 
 ## Install from Windows
 
-An **unsigned IPA cannot be installed directly**. After the build succeeds, download its IPA and locally re-sign/install it using Sideloadly or AltStore/AltServer with your own free Apple ID and connected iPhone. Keep Apple ID credentials in the signing tool; they are not needed in this project or CI.
+An **unsigned IPA cannot be installed directly**. The downloadable app is named `Room-iPhone.ipa` (the same unsigned app as CI's `Room-unsigned.ipa`). Locally re-sign/install it using [Sideloadly](https://sideloadly.io/) or AltStore/AltServer with your own free Apple ID and connected iPhone. Keep Apple ID credentials in the signing tool; they are not needed in this project or CI.
 
 Free personal signing typically expires after seven days and has Apple-imposed app/device limits, so the app needs refreshing/re-signing. A paid Apple Developer account is needed for normal App Store/TestFlight distribution. This project does not bypass Apple's signing rules.
 
 ## Verification status
 
-The project structure, scheme, asset metadata, plist privacy entries, and source were inspected on Windows. **No Mac/Xcode build, IPA, signing, or iPhone run is claimed.** The workflow provides the build path; its result still needs to be checked. Native camera, audio routing and WKWebView calls need a real iPhone test after installation.
+The project structure, scheme, asset metadata, plist privacy entries, and source were inspected on Windows. The macOS cloud build successfully compiled and archived the native iOS app and produced an unsigned IPA. **The app has not been signed, installed, or tested on an iPhone.** Native camera, microphone, audio routing, and WKWebView calls still need a real iPhone test after installation.
