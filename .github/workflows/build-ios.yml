@@ -4,7 +4,7 @@ name: Build unsigned Room iOS app
 
 jobs:
   unsigned-ipa:
-    runs-on: macos-14
+    runs-on: macos-latest
     timeout-minutes: 10
     permissions:
       contents: read
